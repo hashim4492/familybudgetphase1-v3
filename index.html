@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Family Budget</title>
+<meta name="description" content="Family Budget - track income, expenses and limits. Works offline.">
+<meta name="application-name" content="Family Budget">
+<meta name="format-detection" content="telephone=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Budget">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#111827">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="120x120" href="icons/icon-120.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+<link rel="apple-touch-startup-image" href="splash/splash-1320x2868.png" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1206x2622.png" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1260x2736.png" media="(device-width: 420px) and (device-height: 912px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1242x2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1080x2340.png" media="(device-width: 360px) and (device-height: 780px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)">
+<link rel="apple-touch-startup-image" href="splash/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+<div class="top"><div class="hd"><img class="logo" src="icons/icon-192.png" alt="Family Budget" width="46" height="46"><div class="greet" id="greet">Hello</div></div><h1 class="sr">Family Budget</h1>
+<div class="mnav"><button class="b2" onclick="mv(-1)" aria-label="Previous month">‹</button><span id="mlabel"></span><button class="b2" onclick="mv(1)" aria-label="Next month">›</button></div></div>
+
+<section id="home" class="page on">
+<div id="abanner"></div>
+<div class="card" id="autolog-home-card" style="border:1px solid var(--line)">
+  <div class="row" style="align-items:center;gap:12px"><div style="font-size:26px" aria-hidden="true">↻</div><div style="flex:1;min-width:0"><strong>AutoLog · Bank SMS</strong><div class="small" style="margin-top:4px">Set up new-message automation and fetch older messages from one place.</div></div></div>
+  <button type="button" style="width:100%;margin-top:12px" onclick="openAutoLogSetup()">Set Up AutoLog</button>
+  <div class="small" style="margin-top:7px">Your messages and transactions stay on this device.</div>
+</div>
+<div class="card" id="welcome" style="display:none"><strong>Let's understand your spending 📊</strong><p class="small" style="margin:6px 0 12px">Add your previous bank messages so your spending history appears right away.</p><div class="row f"><button type="button" onclick="openHistory()">Import previous transactions</button><button type="button" class="b2" onclick="skipWelcome()">Skip</button></div></div>
+<div class="card nr" id="nrcard" style="display:none"></div>
+<div class="flow st-none" id="flowcard"><div class="fl-head"><span class="lbl">MONEY FLOW</span><span class="pill" id="fl-pill">No limit set</span></div>
+<div id="fl-steps"></div><div class="flowbar"><i id="fb-a"></i><i id="fb-b"></i></div><div class="fl-note" id="fl-note"></div></div>
+<div id="pstack" class="pstack" style="display:none"></div>
+<div class="card" id="pcard" style="display:none"><div class="row"><strong>New from messages (<span id="pcount">0</span>)</strong><button class="sm" onclick="acceptAll()">Add all</button></div><div id="plist"></div></div>
+<div class="quick"><button class="b2 mb cash" onclick="openAdd('expense','cash')"><svg class="ic ic-cash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9v.01M18 15v.01"/></svg>− Cash</button><button class="b2 mb card" onclick="openAdd('expense','card')"><svg class="ic ic-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>− Card</button><button class="b2 mb credit" onclick="openAdd('expense','credit')"><svg class="ic ic-credit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 9h20"/><path d="M6 14h3M12 14h2"/><path d="M17.5 13.5a2 2 0 0 1 0 3"/></svg>− Credit</button><button class="inc" onclick="openAdd('income')">+ Income</button></div>
+<div class="paste"><button class="b2" onclick="pasteToPending()">📋 Paste bank SMS</button><div class="small" id="pmsg" style="margin-top:6px;text-align:center"></div></div>
+<div class="two">
+<div class="card cbox" id="c-limit" onclick="togglePanel('limit')">
+<div class="rbox"><svg id="lsvg" viewBox="0 0 140 140"><circle cx="70" cy="70" r="56" fill="none" stroke="var(--line)" stroke-width="11"/><g transform="rotate(-90 70 70)"><circle id="larc" cx="70" cy="70" r="56" fill="none" stroke="var(--acc)" stroke-width="11" stroke-opacity=".3" stroke-dasharray="0 351.86"/><circle id="sarc" cx="70" cy="70" r="56" fill="none" stroke="var(--acc)" stroke-width="11" stroke-dasharray="0 351.86"/></g><circle id="dot" cx="70" cy="14" r="8" fill="#fff" stroke="var(--acc)" stroke-width="4" style="pointer-events:none"/><circle id="dotHit" cx="70" cy="14" r="17" fill="transparent" style="touch-action:none;cursor:grab"/></svg>
+<div class="ctr"><div class="lbl" id="hl"></div><div class="hv" id="bal"></div><div class="small" id="btxt"></div></div></div>
+<div class="small tap" id="lcap">Limit · tap for details</div></div>
+<div class="card cbox" id="c-exp" onclick="togglePanel('exp')">
+<div class="rbox"><svg viewBox="0 0 140 140"><circle cx="70" cy="70" r="56" fill="none" stroke="var(--line)" stroke-width="11"/><g id="dseg" transform="rotate(-90 70 70)"></g></svg>
+<div class="ctr"><div class="lbl">Total spent</div><div class="hv" id="dtot"></div><div class="small" id="dmon"></div></div></div>
+<div class="small tap">Expenses · tap for details</div></div>
+</div>
+<div class="card" id="dpanel" style="display:none"><div class="dl" id="adet"></div><div class="dl" id="dleg"></div></div>
+<div class="card grow" id="growcard"><svg id="gsvg" class="gs-none" viewBox="0 0 120 100" aria-hidden="true"><defs><linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:var(--l1)"/><stop offset="1" style="stop-color:var(--l2)"/></linearGradient></defs>
+<ellipse class="g-soil" cx="60" cy="90" rx="44" ry="7"/><g id="g-seed"><ellipse class="g-seedc" cx="60" cy="85" rx="7" ry="5"/></g>
+<g id="g-tree" style="transform-origin:60px 90px;transform:scale(0)"><path class="g-trunk" d="M60 90 C57 72 63 58 60 42"/><circle cx="60" cy="34" r="22" fill="url(#gl)"/><circle cx="41" cy="50" r="15" fill="url(#gl)"/><circle cx="79" cy="50" r="15" fill="url(#gl)"/>
+<g id="g-bloom" style="opacity:0"><circle class="g-b" cx="52" cy="28" r="3.2"/><circle class="g-b" cx="68" cy="38" r="3.2"/><circle class="g-b" cx="40" cy="48" r="3"/><circle class="g-b" cx="80" cy="50" r="3"/><circle class="g-b" cx="60" cy="52" r="2.8"/></g></g></svg>
+<div><div class="lbl" style="letter-spacing:.08em;font-weight:700">BUDGET GROWTH</div><div class="g-title" id="g-title">Plant your seed</div><div class="small" id="g-text"></div></div></div>
+<div class="card spend-card"><strong>Where your money goes</strong><div id="top" style="margin-top:4px"></div></div>
+</section>
+
+<section id="transactions" class="page">
+<div class="card"><div class="row"><strong>Check by date</strong><button type="button" class="sm plus" onclick="openPeriodForm()" aria-label="Save a period" title="Save a period">+</button></div>
+<div class="pform" id="pform" style="display:none"><strong id="pftitle">New saved period</strong>
+<label class="dl-lbl" for="pfn">Period name</label><input id="pfn" maxlength="40" placeholder="e.g. October Card" autocomplete="off">
+<label class="dl-lbl" for="pff">From date</label><input id="pff" class="dt" type="date" required>
+<label class="dl-lbl" for="pft">To date</label><input id="pft" class="dt" type="date" required>
+<div class="small r" id="pfmsg"></div><div class="row f"><button type="button" onclick="savePeriod()">Save</button><button type="button" class="b2" onclick="closePeriodForm()">Cancel</button></div></div>
+<div style="margin-top:12px"><label class="dl-lbl" for="rf">From (start date)</label><input id="rf" class="dt" type="date" required onchange="setRange()"></div>
+<div style="margin-top:10px"><label class="dl-lbl" for="rt">To (end date)</label><input id="rt" class="dt" type="date" required onchange="setRange()"></div>
+<div class="row f" style="margin-top:10px;gap:6px"><button type="button" class="b2 sm" onclick="preset('m0')">This month</button><button type="button" class="b2 sm" onclick="preset('m1')">Last month</button><button type="button" class="b2 sm" onclick="preset('d30')">Last 30 days</button></div>
+<select id="rm" onchange="setRange()" style="margin-top:10px"><option value="">All entries</option><option value="card">💳 Card / transfer expenses only</option><option value="credit">💳 Credit card expenses only</option><option value="cash">💵 Cash expenses only</option></select>
+<div id="rsum"></div><button class="b2 sm" id="rclr" style="margin-top:10px;display:none" onclick="clearRange()">Clear dates</button></div>
+<div class="card" id="plcard"><strong>Saved periods</strong><div id="plist2"></div></div>
+<div class="card"><div class="row"><strong>Transactions</strong><button class="sm" onclick="openAdd()">+ Add</button></div><div id="list"></div></div>
+</section>
+
+<section id="period" class="page">
+<div class="card"><button type="button" class="back" onclick="closePeriod()">‹ Back</button>
+<h2 id="pdname" style="margin:4px 0 2px"></h2><div class="small" id="pdrange"></div>
+<div class="small" style="margin-top:14px">Total Spent</div><div class="big r" id="pdtotal"></div><div class="small" id="pdcount"></div></div>
+<div class="card"><strong>By category</strong><div id="pdcats"></div></div>
+<div class="card"><strong>Transactions</strong><div id="pdlist"></div></div>
+</section>
+<section id="budget" class="page">
+<div class="card lim"><div class="lbl" style="letter-spacing:.09em;font-weight:700">MONTHLY LIMIT</div>
+<div class="lim-row"><button type="button" class="step" aria-label="Decrease limit" onclick="bump(-1)">−</button><div class="lim-val" id="limval">Not set</div><button type="button" class="step" aria-label="Increase limit" onclick="bump(1)">+</button></div>
+<div id="limstat"></div>
+<form onsubmit="saveBudget(event)"><input id="binput" type="number" inputmode="decimal" min="0" max="1000000" step="0.01" placeholder="Limit (up to 1,000,000)"><button>Save budget</button></form><div id="brem" style="margin-top:14px;text-align:left"></div></div>
+<div class="card"><strong>Spending by category</strong><div id="cats"></div></div>
+<div class="card"><strong>Spending alerts</strong><p class="small" style="margin:6px 0 10px">Add amounts such as 10000 and 11000. You are warned when a month's expenses reach each one.</p><form onsubmit="addAlert(event)" style="grid-template-columns:1fr auto"><input id="ainput" type="number" min="1" step="1" placeholder="e.g. 10000"><button>Add</button></form><div id="alist"></div></div>
+<div class="card"><strong>Compare with this month</strong><select id="cmp" onchange="renderCmp()" style="margin-top:10px"></select><div id="cmpOut"></div></div>
+
+<div class="card"><strong>My cards</strong><p class="small" style="margin:6px 0 10px"><b>Optional.</b> Messages are imported even if the card is not saved here. Saving a card only lets the app recognise it and group its transactions. Save only the bank and the last 4 digits, never the full card number.</p>
+<form onsubmit="addCard(event)"><input id="cbank" placeholder="Bank, e.g. ADCB"><input id="clast" inputmode="numeric" autocomplete="off" placeholder="Last 4 digits"><select id="ctype"><option value="credit">Credit card</option><option value="debit">Debit card</option></select><input id="cnick" placeholder="Nickname (optional)"><input id="cnotes" placeholder="Notes (optional, never card numbers)"><button>Add card</button></form><div class="small r" id="cmsg" style="margin-top:8px"></div><div id="clist"></div></div>
+<div class="card"><strong>Currency</strong><select id="cursel" onchange="setCur(this.value)" style="margin-top:10px"></select><p class="small" style="margin:8px 0 0">Applies everywhere in the app. Existing amounts are not converted, only the currency shown changes.</p></div>
+</section>
+
+<section id="add" class="page" data-type="expense">
+<div class="card" id="smsCard"><strong>Paste a bank message</strong><p class="small" style="margin:6px 0 10px">Copy the SMS from your bank or card app and I will read the amount, shop, date and whether it was spent or received. Nothing is saved until you press Save.</p>
+<textarea id="sms" placeholder="e.g. Your card ending 1234 was used for AED 150.00 at ENOC on 29-Sep-26"></textarea>
+<div class="row f" style="margin-top:10px"><button type="button" onclick="pasteClip()">Paste and detect</button><button type="button" class="b2" onclick="detect()">Detect</button></div><div class="small" id="smsMsg" style="margin-top:8px"></div></div>
+<div class="card"><h2 id="addTitle" style="margin-top:0">Add transaction</h2>
+<form onsubmit="saveTx(event)">
+<select id="type" onchange="segVis()" style="display:none"><option value="expense">Expense</option><option value="income">Income</option></select>
+<div class="seg2" id="tseg"><button type="button" data-t="expense" onclick="setType('expense')">Expense</button><button type="button" data-t="income" onclick="setType('income')">Income</button></div>
+<div class="amt-hero"><div class="amt-q">How much?</div><div class="amt-row"><span class="amt-cur" id="amtcur">AED</span><input id="amount" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00" required></div></div>
+<select id="method" style="display:none"><option value="cash">Cash</option><option value="card">Card</option><option value="credit">Credit card</option></select>
+<div class="sec-l">Paid with</div>
+<div class="row f" id="seg"><button type="button" class="b2 mb cash" data-m="cash" onclick="pickMethod('cash')"><svg class="ic ic-cash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M6 9v.01M18 15v.01"/></svg>Cash</button><button type="button" class="b2 mb card" data-m="card" onclick="pickMethod('card')"><svg class="ic ic-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>Card</button><button type="button" class="b2 mb credit" data-m="credit" onclick="pickMethod('credit')"><svg class="ic ic-credit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 9h20"/><path d="M6 14h3M12 14h2"/><path d="M17.5 13.5a2 2 0 0 1 0 3"/></svg>Credit</button></div>
+<select id="cardsel" style="display:none" onchange="pickCard(this.value)"></select>
+<button type="button" class="b2 sm" id="savecardbtn" style="display:none" onclick="prefillCard()"></button>
+<div class="sec-l">What was it?</div>
+<input id="merchant" placeholder="Merchant / description" required>
+<div class="sec-l">Category</div>
+<select id="category" style="display:none"></select><div class="cgrid" id="catgrid"></div>
+<div class="two-col"><div><label class="dl-lbl" for="date">Date</label><input id="date" class="dt" type="date" required></div><div><label class="dl-lbl" for="time">Time (optional)</label><input id="time" class="dt" type="time"></div></div>
+<input id="notes" placeholder="Notes (optional)">
+<details id="origBox" style="display:none"><summary class="small">Original message</summary><div id="origTxt" class="small" style="white-space:pre-wrap;margin-top:6px"></div></details>
+<div class="small r" id="fmsg"></div>
+<div class="row f"><button type="submit" class="save">Save</button><button type="button" class="b2" onclick="show('transactions')">Cancel</button></div>
+<button type="button" class="bd" id="delBtn" onclick="delTx()" style="display:none">Delete transaction</button>
+</form></div>
+</section>
+
+<section id="settings" class="page">
+<div class="card" id="autolog-settings-card"><div class="row" style="align-items:center;gap:12px"><div style="font-size:26px" aria-hidden="true">↻</div><div style="flex:1;min-width:0"><strong>AutoLog setup</strong><p class="small" style="margin:5px 0 0">Configure your iPhone message workflows and import history.</p></div></div><button type="button" style="width:100%;margin-top:10px" onclick="openAutoLogSetup()">Set Up AutoLog</button></div>
+<div class="card"><strong>Backup</strong><p class="small">Data lives only in this browser and can be lost if browser storage is cleared. Copy a backup now and then, and paste it back to restore.</p>
+<div class="row f"><button class="b2" onclick="exportData()">Show backup</button><button class="b2" onclick="copyData()">Copy</button></div>
+<textarea id="bk" style="margin-top:10px" placeholder="Backup appears here. Paste a backup here to restore."></textarea>
+<button style="margin-top:10px;width:100%" onclick="importData()">Restore from text</button><div class="small" id="msg" style="margin-top:8px"></div></div>
+<div class="card"><strong>Import old bank messages</strong>
+<p class="small" style="margin:6px 0 10px">Fetch your available old bank SMS with your iPhone Shortcut, then import the exported file. Already-imported messages are skipped. Your data stays on this device.</p>
+<button type="button" style="width:100%" onclick="openHistory()">Fetch &amp; import old messages</button></div>
+<div class="card"><strong>Automatic import (iPhone Shortcuts)</strong>
+<p class="small" style="margin:6px 0 10px">An iPhone will not let any app read your text messages. Instead, a Shortcut on your iPhone saves each bank message to a file on your phone, and you load that file here. Nothing leaves your phone. Messages already imported are skipped, so loading the same file again is safe.</p>
+<button style="width:100%" onclick="pickAutoFile()">Choose messages file</button>
+<input type="file" id="afile" accept=".txt,.csv,text/plain" style="display:none" onchange="onAutoFile(this)">
+<div class="small" id="aires" style="margin-top:8px"></div>
+<details style="margin-top:10px"><summary class="small">What the file must look like</summary><pre class="orig" style="margin-top:8px">&lt;&lt;&lt;FB&gt;&gt;&gt;
+Received: 2026-09-28 19:06
+Your card ending 1920 was used for AED 28.50 at Carrefour on 28 Sep 2026 at 19:05.
+&lt;&lt;&lt;FB&gt;&gt;&gt;
+Received: 2026-09-29 08:20
+(the next bank message, exactly as received)</pre><div class="small">Each message starts with a line <b>&lt;&lt;&lt;FB&gt;&gt;&gt;</b>. The Received line is optional and is only used when the message itself has no date or time.</div></details>
+<details style="margin-top:10px"><summary class="small">How to set it up on iPhone (one time)</summary>
+<ol class="small" style="margin:8px 0 0;padding-left:18px;line-height:1.55">
+<li>Open <b>Shortcuts</b>, then <b>Automation</b>, then <b>+</b>, then <b>Message</b>.</li>
+<li>Under <b>Message Contains</b>, type a phrase your bank's messages always contain, for example <b>AED</b>. (Banks usually send from a name that iPhone cannot pick as a Sender, so matching the text is more reliable.) Tap Next.</li>
+<li>Add the action <b>Format Date</b> (Current Date, custom format <b>yyyy-MM-dd HH:mm</b>).</li>
+<li>Add the action <b>Text</b> with three lines: <b>&lt;&lt;&lt;FB&gt;&gt;&gt;</b>, then <b>Received:</b> followed by the Formatted Date, then the <b>Shortcut Input</b> (the message).</li>
+<li>Add the action <b>Append to File</b>. Pick the file <b>FamilyBudget-messages.txt</b> in <b>On My iPhone &gt; Shortcuts</b> and turn on "Make New File if Necessary" if you see it. Tap Done.</li>
+<li>Any time, tap <b>Choose messages file</b> above and pick that file. Every imported message waits in <b>Review</b> on Home. You check it, choose a category and save.</li>
+<li>So it runs without asking you: choose <b>Run Immediately</b> if iOS offers it, or open the shortcut's info (i), tap <b>Privacy</b> and turn on <b>Allow Running When Locked</b>. The first run may ask permission for the file; allow it.</li></ol>
+<p class="small" style="margin:8px 0 0">On Android the same button works with any file your automation app writes in this format.</p></details></div>
+<div class="card"><strong>Test import (V1)</strong><p class="small" style="margin:6px 0 10px">For testing only. This does not connect to any bank. Paste a sample bank message or tap an example, then press Import. The result is saved like a real transaction, so you can edit or delete it.</p>
+<textarea id="tmsg" placeholder="Paste a bank message here"></textarea>
+<div class="row f" style="margin-top:10px"><button onclick="testImport()">Import message</button><button class="b2" onclick="testAgain()">Import last message again</button></div>
+<div class="small" id="tres" style="margin-top:8px"></div>
+<div class="small" style="margin-top:12px;font-weight:600">Examples (tap to fill)</div><div id="texamples"></div></div>
+<div class="card"><strong>Export as PDF</strong><p class="small" style="margin:6px 0 10px">Creates a report of your entries with totals, categories and every transaction. Leave both dates empty to include everything.</p>
+<label class="dl-lbl" for="ef">From (start date)</label><input id="ef" class="dt" type="date" required>
+<label class="dl-lbl" for="et" style="margin-top:10px">To (end date)</label><input id="et" class="dt" type="date" required>
+<button style="margin-top:12px;width:100%" onclick="makePdf()">Create PDF</button><div class="small" id="pmsg2" style="margin-top:8px"></div></div>
+<div class="card"><button class="bd" onclick="clearAll()">Clear all data</button></div>
+<div class="card"><strong>Your name</strong><p class="small" style="margin:6px 0 10px">Shown in the greeting on the Home screen.</p><input id="pname" maxlength="40" placeholder="e.g. Mr. Hashim" autocomplete="name"><button type="button" style="margin-top:10px;width:100%" onclick="saveProfile()">Save name</button></div>
+<div class="card"><strong>App version</strong>
+<p class="small" style="margin:6px 0 10px">If you deployed a new version and nothing changed, tap Check for updates.</p>
+<div class="small" id="verout">Running: <b id="verrun"></b></div>
+<div class="row f" style="margin-top:10px"><button type="button" class="b2" onclick="checkUpdate()">Check for updates</button><button type="button" class="b2" onclick="location.reload()">Refresh</button></div></div>
+</section>
+</div>
+
+<div id="rvmodal" class="modal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="rvtitle"><div class="sheet">
+<h2 id="rvtitle">Review transaction</h2><div class="small">Check what was found in the message, choose a category and save.</div>
+<div class="small" style="margin-top:12px;font-weight:650">Original message</div><div class="orig" id="rvorig"></div>
+<div id="rvinfo"></div>
+<div class="small" id="rvwhy" style="display:none;color:var(--ytxt);margin-top:8px"></div>
+<div class="small" id="rvdup" style="display:none;color:var(--ytxt);margin-top:8px">Looks the same as an earlier entry. Save it only if it is a separate purchase.</div>
+<div id="rvdatewrap" style="display:none"><label class="dl-lbl" for="rvdate" style="margin-top:12px">Date (not in the message)</label><input id="rvdate" class="dt" type="date"></div>
+<label class="dl-lbl" for="rvmerch" style="margin-top:12px">Merchant (only if the message shows one)</label><input id="rvmerch" maxlength="60" placeholder="Leave empty if the message has no merchant" autocomplete="off">
+<label class="dl-lbl" for="rvcat" style="margin-top:10px">Category</label><select id="rvcat"></select>
+<div class="small r" id="rvmsg" style="margin-top:8px"></div>
+<div class="row f" style="margin-top:12px"><button type="button" onclick="confirmReview()">Save</button><button type="button" class="b2" id="rvnext" onclick="confirmReview(true)">Save &amp; next</button></div>
+<div class="row f" style="margin-top:8px"><button type="button" class="b2" onclick="dismissReview()">Dismiss</button><button type="button" class="b2" onclick="closeReview()">Cancel</button></div></div></div>
+<div id="autologmodal" class="modal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="autologtitle"><div class="sheet">
+<h2 id="autologtitle">Set Up AutoLog</h2>
+<p class="small" style="margin:6px 0 12px">Set up both message workflows for Family Budget. iPhone will ask for any permissions required when you run an authorized Shortcut or automation.</p>
+<div class="card" style="margin:0 0 10px;padding:12px;background:var(--soft)">
+<strong>1 · New bank messages</strong>
+<p class="small" style="margin:5px 0 10px">Use an iPhone Message automation to append incoming bank SMS to <b>FamilyBudget-messages.txt</b>. This preserves your existing new-message import workflow.</p>
+<button type="button" class="b2" style="width:100%" onclick="openShortcutsForAutoLog()">Open Apple Shortcuts</button>
+<div class="small" id="autolognewstatus" style="margin-top:7px"></div>
+</div>
+<div class="card" style="margin:0 0 10px;padding:12px;background:var(--soft)">
+<strong>2 · Older bank messages</strong>
+<p class="small" style="margin:5px 0 10px">Run the historical export Shortcut, then select its <b>FamilyBudget-history.txt</b> file and preview before importing.</p>
+<button type="button" style="width:100%" onclick="closeAutoLogSetup();openHistory()">Fetch &amp; import old messages</button>
+</div>
+<details><summary class="small">Why does iPhone ask me to approve this?</summary><p class="small" style="margin:8px 0 0">Apple controls access to Messages and automation permissions. A website cannot silently create or authorize iPhone Shortcuts. This screen opens the Shortcuts app and connects to the existing import flows; the actual Shortcuts must be created/installed and approved on the iPhone.</p></details>
+<div class="row f" style="margin-top:14px"><button type="button" class="b2" onclick="closeAutoLogSetup()">Close</button></div>
+</div></div>
+<div id="himodal" class="modal" style="display:none" role="dialog" aria-modal="true" aria-labelledby="hititle"><div class="sheet">
+<h2 id="hititle">Fetch old bank messages</h2>
+<div id="hi1">
+<p class="small" style="margin:4px 0 12px">Use the separate iPhone Shortcut to search available message history and save it as <b>FamilyBudget-history.txt</b>. Then choose that file here. Family Budget will preview the transactions and skip duplicates before saving.</p>
+<div class="card" style="margin:0 0 12px;padding:12px;background:var(--soft)">
+<strong>Step 1 · Fetch messages</strong>
+<p class="small" style="margin:5px 0 10px">Runs the Shortcut named <b>Export bank messages</b>. This works only after that Shortcut has been created on your iPhone and granted permission to find messages.</p>
+<button type="button" style="width:100%" onclick="launchHistoryShortcut()">Run “Export bank messages”</button>
+<div class="small" id="hishortcutmsg" style="margin-top:8px"></div>
+</div>
+<div class="card" style="margin:0;padding:12px;background:var(--soft)">
+<strong>Step 2 · Import the export</strong>
+<p class="small" style="margin:5px 0 10px">After the Shortcut finishes, return here and select <b>FamilyBudget-history.txt</b> from the location where you saved it.</p>
+<button type="button" class="b2" style="width:100%" onclick="$('hifile').click()">Choose FamilyBudget-history.txt</button>
+<input type="file" id="hifile" accept=".txt,.csv,text/plain" style="display:none" onchange="hiFile(this)">
+<div class="small" id="hiloaded" style="margin-top:8px"></div>
+</div>
+<details style="margin-top:12px"><summary class="small">Important: one-time Shortcut requirement</summary>
+<p class="small" style="margin:8px 0 0">This app cannot install an Apple Shortcut by itself or read Messages directly. The separate <b>Export bank messages</b> Shortcut must already exist on your iPhone. The button above launches it; it does not create it. iOS may limit which messages can be found, and the Shortcut must save the output as <b>FamilyBudget-history.txt</b>.</p></details>
+<div class="small r" id="himsg" style="margin-top:8px"></div>
+<div class="row f" style="margin-top:12px"><button type="button" onclick="hiScan()">Preview transactions</button><button type="button" class="b2" onclick="closeHistory()">Close</button></div></div>
+<div id="hi2" style="display:none"><div class="small" id="hiprog">Scanning transaction messages…</div><div id="hires"></div>
+<div class="row f" style="margin-top:12px"><button type="button" id="hicommit" onclick="hiCommit()">Import Transactions</button><button type="button" class="b2" onclick="hiBack()">Back</button></div></div>
+</div></div>
+<div id="toast" class="toast" onclick="this.style.display='none'"></div>
+<nav aria-label="Main">
+<button onclick="show('home')" id="n-home" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg><span>Home</span></button>
+<button onclick="show('transactions')" id="n-transactions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="3.5" cy="6" r="1"/><circle cx="3.5" cy="12" r="1"/><circle cx="3.5" cy="18" r="1"/></svg><span>Transactions</span></button>
+<button onclick="show('budget')" id="n-budget"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v2M21 12h-2"/></svg><span>Budget</span></button>
+<button onclick="show('settings')" id="n-settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg><span>Backup</span></button>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>
